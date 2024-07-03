@@ -5,6 +5,7 @@ import com.toDoApp.toDoBackend.run.Run;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -16,46 +17,48 @@ public class ToDoRepository {
 
     private List<ToDo> toDos = new ArrayList<>();
 
-    List<Run> findAll(){
-        return runs;
+    List<ToDo> findAll(){
+        return toDos;
     }
 
-    Optional<Run> findById(Integer id) {
-        return runs.stream()
-                .filter(run -> run.Id() == id)
+    Optional<ToDo> findById(Integer id) {
+        return toDos.stream()
+                .filter(run -> run.id() == id)
                 .findFirst();
     }
 
-    void update(Run run, Integer id){
-        Optional<Run> existingRun = findById(id);
-        if(existingRun.isPresent()){
-            runs.set(runs.indexOf(existingRun.get()), run);
+    void update(ToDo toDo, Integer id){
+        Optional<ToDo> existingToDo = findById(id);
+        if(existingToDo.isPresent()){
+            toDos.set(toDos.indexOf(existingToDo.get()), toDo);
         }
     }
 
     void delete(Integer id){
-        runs.removeIf(run -> run.Id().equals(id));
+        toDos.removeIf(run -> run.id().equals(id));
     }
 
-    void create(Run run){
-        runs.add(run);
+    void create(ToDo toDo){
+        toDos.add(toDo);
     }
 
     @PostConstruct //Do some initialization in this class
     private void init(){
-        runs.add(new Run(1,
-                "Monday Morning Run",
-                LocalDateTime.now(),
-                LocalDateTime.now().plus(30, ChronoUnit.MINUTES),
-                3,
-                Location.INDOOR));
+        toDos.add(new ToDo(1,
+                "Clean the dishes",
+                LocalDate.of(2024, 6, 3),
+                false,
+                null,
+                ToDoPriority.LOW,
+                LocalDateTime.now()));
 
-        runs.add(new Run(2,
-                "Wednesday Evening Run",
+        toDos.add(new ToDo(2,
+                "Buy new shoes",
+                LocalDate.of(2024, 8, 3),
+                true,
                 LocalDateTime.now(),
-                LocalDateTime.now().plus(60, ChronoUnit.MINUTES),
-                6,
-                Location.INDOOR));
+                ToDoPriority.MEDIUM,
+                LocalDateTime.now()));
     }
 
 
