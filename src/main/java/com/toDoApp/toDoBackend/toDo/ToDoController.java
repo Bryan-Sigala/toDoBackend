@@ -1,7 +1,5 @@
 package com.toDoApp.toDoBackend.toDo;
 
-import com.toDoApp.toDoBackend.run.Run;
-import com.toDoApp.toDoBackend.run.RunRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,47 +13,47 @@ public class ToDoController {
 
     //@RequestMapping asks the path and the request method, it'll be a GET
 
-    private final RunRepository runRepository;
+    private final ToDoRepository toDoRepository;
 
-    public RunController(RunRepository runRepository) {
-        this.runRepository = runRepository;
+    public ToDoController(ToDoRepository toDoRepository) {
+        this.toDoRepository = toDoRepository;
     }
 
-
-
+    // GET Request to get the ToDo list
     @GetMapping("")
-    List<Run> findAll(){
-        return runRepository.findAll();
+    List<ToDo> findAll(){
+        return toDoRepository.findAll();
     }
 
+    // GET Request to get a ToDo by ID
     @GetMapping("/{id}")
-    Run findById(@PathVariable Integer id){
-        Optional<Run> run = runRepository.findById(id);
-        if(run.isEmpty()){
+    ToDo findById(@PathVariable Integer id){
+        Optional<ToDo> toDo = toDoRepository.findById(id);
+        if(toDo.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return  run.get();
+        return  toDo.get();
     }
 
-    // Post
+    // POST request to add a new ToDo to the list
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-    void create(@RequestBody Run run){
-        runRepository.create(run);
+    void create(@RequestBody ToDo toDo){
+        toDoRepository.create(toDo);
     }
 
-    // Put
+    // PUT Request to make a ToDO update
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
-    void update(@RequestBody Run run, @PathVariable Integer id){
-        runRepository.update(run, id);
+    void update(@RequestBody ToDo toDo, @PathVariable Integer id){
+        toDoRepository.update(toDo, id);
     }
 
-    // Delete
+    // DELETE Request to made a ToDo eliminated
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     void delete (@PathVariable Integer id){
-        runRepository.delete(id);
+        toDoRepository.delete(id);
     }
 
 }
