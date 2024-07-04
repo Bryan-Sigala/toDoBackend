@@ -32,14 +32,17 @@ public class ToDoRepository {
             String nameFilter,
             String priorityFilter
     ) {
+            List<ToDo> doneFilterList = doneFilter(toDos, doneFilter)
+                    .stream()
+                    .toList();
 
 
 
         int start = (page - 1) * pageSize;
         int end = Math.min(start + pageSize, toDos.size());
-        List<ToDo> paginatedToDos = toDos.subList(start, end);
+        List<ToDo> paginatedToDos = doneFilterList.subList(start, end);
 
-        return toDos.subList(start, end);
+        return paginatedToDos;
     }
 
     // Filters methods
