@@ -36,7 +36,9 @@ public class ToDoRepository {
                     .stream()
                     .toList();
 
-
+            List<ToDo> priorityFilterList = priorityFilter(doneFilterList, priorityFilter)
+                    .stream()
+                    .toList();
 
         int start = (page - 1) * pageSize;
         int end = Math.min(start + pageSize, doneFilterList.size());
@@ -65,7 +67,25 @@ public class ToDoRepository {
     }
 
     // Priority Filter
-
+    List<ToDo> priorityFilter(List<ToDo> toDoList, String param){
+        return switch (param) {
+            case "HIGH" -> toDoList
+                    .stream()
+                    .filter(toDo -> toDo.priority() == ToDoPriority.HIGHT)
+                    .toList();
+            case "MEDIUM" -> toDoList
+                    .stream()
+                    .filter(toDo -> toDo.priority() == ToDoPriority.MEDIUM)
+                    .toList();
+            case "LOW" -> toDoList
+                    .stream()
+                    .filter(toDo -> toDo.priority() == ToDoPriority.LOW)
+                    .toList();
+            default -> toDoList
+                    .stream()
+                    .toList();
+        };
+    }
 
     Optional<ToDo> findById(Integer id) {
         return toDos.stream()
