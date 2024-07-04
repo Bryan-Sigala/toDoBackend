@@ -4,6 +4,8 @@ import com.toDoApp.toDoBackend.run.Location;
 import com.toDoApp.toDoBackend.run.Run;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,6 +21,24 @@ public class ToDoRepository {
 
     List<ToDo> findAll(){
         return toDos;
+    }
+
+    List<ToDo> getToDos(
+            Integer page,
+            Integer pageSize,
+            String sortBy,
+            String doneFilter,
+            String nameFilter,
+            String priorityFilter
+    ) {
+        //
+
+
+
+        int start = (page - 1) * pageSize;
+        int end = Math.min(start + pageSize, toDos.size());
+
+        return toDos.subList(start, end);
     }
 
     Optional<ToDo> findById(Integer id) {

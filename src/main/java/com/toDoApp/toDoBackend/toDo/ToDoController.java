@@ -19,10 +19,23 @@ public class ToDoController {
         this.toDoRepository = toDoRepository;
     }
 
-    // GET Request to get the ToDo list
+    /*// GET Request to get the ToDo list
     @GetMapping("")
     List<ToDo> findAll(){
         return toDoRepository.findAll();
+    }*/
+
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @GetMapping("")
+    List<ToDo> getToDos(
+            @RequestParam Integer page,
+            @RequestParam Integer pageSize,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String doneFilter,
+            @RequestParam(required = false) String nameFilter,
+            @RequestParam(required = false) String priorityFilter
+    ){
+        return toDoRepository.getToDos(page, pageSize, sortBy, doneFilter, nameFilter, priorityFilter);
     }
 
     // GET Request to get a ToDo by ID
