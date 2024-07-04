@@ -39,7 +39,7 @@ public class ToDoRepository {
 
 
         int start = (page - 1) * pageSize;
-        int end = Math.min(start + pageSize, toDos.size());
+        int end = Math.min(start + pageSize, doneFilterList.size());
         List<ToDo> paginatedToDos = doneFilterList.subList(start, end);
 
         return paginatedToDos;
@@ -47,25 +47,24 @@ public class ToDoRepository {
 
     // Filters methods
     // Done Filter
-     Optional<ToDo> doneFilter(List<ToDo> toDoList, String param){
-        if(param.isEmpty())
-            return toDoList
-                    .stream()
-                    .findFirst();
-        else if(param.equals("DONE"))
+     List<ToDo> doneFilter(List<ToDo> toDoList, String param){
+        if(param.equals("DONE"))
             return toDoList
                     .stream()
                     .filter(ToDo::done)
-                    .findFirst();
+                    .toList();
         else if(param.equals("UNDONE"))
             return toDoList
                     .stream()
                     .filter(toDo -> !toDo.done())
-                    .findFirst();
+                    .toList();
         else
-            throw new IllegalArgumentException("Parámetro de filtro no válido: " + param);
+            return toDoList
+                    .stream()
+                    .toList();
     }
 
+    // Priority Filter
 
 
     Optional<ToDo> findById(Integer id) {
