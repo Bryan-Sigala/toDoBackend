@@ -13,6 +13,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class ToDoRepository {
@@ -31,15 +32,38 @@ public class ToDoRepository {
             String nameFilter,
             String priorityFilter
     ) {
-        //
 
 
 
         int start = (page - 1) * pageSize;
         int end = Math.min(start + pageSize, toDos.size());
+        List<ToDo> paginatedToDos = toDos.subList(start, end);
 
         return toDos.subList(start, end);
     }
+
+    // Filters methods
+    // Done Filter
+     Optional<ToDo> doneFilter(List<ToDo> toDoList, String param){
+        if(param.isEmpty())
+            return toDoList
+                    .stream()
+                    .findFirst();
+        else if(param.equals("DONE"))
+            return toDoList
+                    .stream()
+                    .filter(ToDo::done)
+                    .findFirst();
+        else if(param.equals("UNDONE"))
+            return toDoList
+                    .stream()
+                    .filter(toDo -> !toDo.done())
+                    .findFirst();
+        else
+            throw new IllegalArgumentException("Parámetro de filtro no válido: " + param);
+    }
+
+
 
     Optional<ToDo> findById(Integer id) {
         return toDos.stream()
