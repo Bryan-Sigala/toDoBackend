@@ -36,13 +36,17 @@ public class ToDoRepository {
                     .stream()
                     .toList();
 
-            List<ToDo> priorityFilterList = priorityFilter(doneFilterList, priorityFilter)
+            List<ToDo> textFilterList = textFilter(doneFilterList, nameFilter)
+                    .stream()
+                    .toList();
+
+            List<ToDo> priorityFilterList = priorityFilter(textFilterList, priorityFilter)
                     .stream()
                     .toList();
 
         int start = (page - 1) * pageSize;
-        int end = Math.min(start + pageSize, doneFilterList.size());
-        List<ToDo> paginatedToDos = doneFilterList.subList(start, end);
+        int end = Math.min(start + pageSize, priorityFilterList.size());
+        List<ToDo> paginatedToDos = priorityFilterList.subList(start, end);
 
         return paginatedToDos;
     }
@@ -63,6 +67,19 @@ public class ToDoRepository {
         else
             return toDoList
                     .stream()
+                    .toList();
+    }
+
+    // Text Filter
+    List<ToDo> textFilter(List<ToDo> toDoList, String param){
+        if(param.isEmpty())
+            return toDoList
+                    .stream()
+                    .toList();
+        else
+            return toDoList
+                    .stream()
+                    .filter(toDo -> toDo.text().toLowerCase().contains(param.toLowerCase()))
                     .toList();
     }
 
