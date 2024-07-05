@@ -31,23 +31,17 @@ public class ToDoRepository {
             String nameFilter,
             String priorityFilter
     ) {
-            List<ToDo> doneFilterList = doneFilter(toDos, doneFilter)
-                    .stream()
-                    .toList();
+            List<ToDo> doneFilterList = doneFilter(toDos, doneFilter);
 
-            List<ToDo> textFilterList = textFilter(doneFilterList, nameFilter)
-                    .stream()
-                    .toList();
+            List<ToDo> textFilterList = textFilter(doneFilterList, nameFilter);
 
-            List<ToDo> priorityFilterList = priorityFilter(textFilterList, priorityFilter)
-                    .stream()
-                    .toList();
+            List<ToDo> priorityFilterList = priorityFilter(textFilterList, priorityFilter);
 
         int start = (page - 1) * pageSize;
         int end = Math.min(start + pageSize, priorityFilterList.size());
         List<ToDo> paginatedToDos = priorityFilterList.subList(start, end);
 
-        //sortBy(paginatedToDos, sortBy);
+        sortBy(paginatedToDos, sortBy);
 
         return paginatedToDos;
     }
@@ -58,17 +52,17 @@ public class ToDoRepository {
 
         switch (param) {
             case "priorityAsc":
-                comparator = Comparator.comparing(ToDo::priority);
+                comparator = Comparator.comparing(ToDo::getPriority);
                 break;
             case "priorityDes":
-                comparator = Comparator.comparing(ToDo::priority, Comparator.reverseOrder());
+                comparator = Comparator.comparing(ToDo::getPriority, Comparator.reverseOrder());
                 System.out.println(comparator);
                 break;
             case "dueDateAsc":
-                comparator = Comparator.comparing(ToDo::dueDate);
+                comparator = Comparator.comparing(ToDo::getDueDate);
                 break;
             case "dueDateDes":
-                comparator = Comparator.comparing(ToDo::dueDate, Comparator.reverseOrder());
+                comparator = Comparator.comparing(ToDo::getDueDate, Comparator.reverseOrder());
                 break;
             default:
                 // No need for a comparison
@@ -86,55 +80,78 @@ public class ToDoRepository {
         if(param.equals("DONE"))
             return toDoList
                     .stream()
-                    .filter(ToDo::done)
-                    .toList();
+                    .filter(ToDo::getDone)
+                    .collect(Collectors.toList());
         else if(param.equals("UNDONE"))
             return toDoList
                     .stream()
-                    .filter(toDo -> !toDo.done())
-                    .toList();
+                    .filter(toDo -> !toDo.getDone())
+                    .collect(Collectors.toList());
         else
             return toDoList
                     .stream()
-                    .toList();
+                    .collect(Collectors.toList());
     }
 
     // Text Filter
     List<ToDo> textFilter(List<ToDo> toDoList, String param){
         //System.out.println(param);
+        if(param == null || param.isEmpty()){
+            return toDoList;
+        }
         return toDoList
                 .stream()
-                .filter(toDo -> param == null || param.isEmpty() || toDo.text().toLowerCase().contains(param.toLowerCase()))
-                .toList();
+                .filter(toDo -> toDo.getText().toLowerCase().contains(param.toLowerCase()))
+                .collect(Collectors.toList());
     }
 
     // Priority Filter
     List<ToDo> priorityFilter(List<ToDo> toDoList, String param){
-        return switch (param) {
+        param = param.toUpperCase();
+        if(ToDoPriority.isValid(param)){
+            ToDoPriority priority = ToDoPriority.valueOf(param);
+            return toDoList
+                    .stream()
+                    .filter(toDo -> toDo.getPriority() == priority)
+                    .collect(Collectors.toList());
+        }
+        return toDoList;
+        /*return switch (param) {
             case "HIGH" -> toDoList
                     .stream()
-                    .filter(toDo -> toDo.priority() == ToDoPriority.HIGHT)
-                    .toList();
+                    .filter(toDo -> toDo.getPriority() == ToDoPriority.HIGHT)
+                    .collect(Collectors.toList());
             case "MEDIUM" -> toDoList
                     .stream()
-                    .filter(toDo -> toDo.priority() == ToDoPriority.MEDIUM)
-                    .toList();
+                    .filter(toDo -> toDo.getPriority() == ToDoPriority.MEDIUM)
+                    .collect(Collectors.toList());
             case "LOW" -> toDoList
                     .stream()
-                    .filter(toDo -> toDo.priority() == ToDoPriority.LOW)
-                    .toList();
+                    .filter(toDo -> toDo.getPriority() == ToDoPriority.LOW)
+                    .collect(Collectors.toList());
             default -> toDoList
                     .stream()
-                    .toList();
-        };
+                    .collect(Collectors.toList());
+        };*/
     }
 
     Optional<ToDo> findById(Integer id) {
         return toDos.stream()
-                .filter(run -> run.id() == id)
+                .filter(run -> run.getId() == id)
                 .findFirst();
     }
 
+    // POST mark as done
+    void markDone(Integer id, Boolean done){
+        if(!toDos.get(id).getDone()) {
+            ToDo toDo = toDos.get(id);
+
+        }
+    }
+
+    // PUT mark as undone
+
+    // PUT request
     void update(ToDo toDo, Integer id){
         Optional<ToDo> existingToDo = findById(id);
         if(existingToDo.isPresent()){
@@ -142,10 +159,12 @@ public class ToDoRepository {
         }
     }
 
+    // DELETE request to eliminate a ToDo
     void delete(Integer id){
-        toDos.removeIf(run -> run.id().equals(id));
+        toDos.removeIf(run -> run.getId().equals(id));
     }
 
+    // POST request to create new ToDo
     void create(ToDo toDo){
         toDos.add(toDo);
     }
@@ -167,7 +186,7 @@ public class ToDoRepository {
                 LocalDateTime.now(),
                 ToDoPriority.MEDIUM,
                 LocalDateTime.now()));
-    }
 
+    }
 
 }
