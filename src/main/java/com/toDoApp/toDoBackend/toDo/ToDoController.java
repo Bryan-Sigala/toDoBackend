@@ -69,6 +69,13 @@ public class ToDoController {
         toDoRepository.update(toDo, id);
     }
 
+    // PUT request to mark as UNDONE
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/{id}/undone")
+    void markUndone(@PathVariable Integer id){
+        toDoRepository.markUndone(id);
+    }
+
     // DELETE Request to made a ToDo eliminated
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
