@@ -51,10 +51,10 @@ public class ToDoRepository {
         Comparator<ToDo> comparator = null;
 
         switch (param) {
-            case "priorityAsc":
+            case "priorityDes":
                 comparator = Comparator.comparing(ToDo::getPriority);
                 break;
-            case "priorityDes":
+            case "priorityAsc":
                 comparator = Comparator.comparing(ToDo::getPriority, Comparator.reverseOrder());
                 System.out.println(comparator);
                 break;
@@ -77,6 +77,7 @@ public class ToDoRepository {
     // Filters methods
     // Done Filter
      List<ToDo> doneFilter(List<ToDo> toDoList, String param){
+        param = param.toUpperCase();
         if(param.equals("DONE"))
             return toDoList
                     .stream()
@@ -95,7 +96,6 @@ public class ToDoRepository {
 
     // Text Filter
     List<ToDo> textFilter(List<ToDo> toDoList, String param){
-        //System.out.println(param);
         if(param == null || param.isEmpty()){
             return toDoList;
         }
@@ -116,23 +116,6 @@ public class ToDoRepository {
                     .collect(Collectors.toList());
         }
         return toDoList;
-        /*return switch (param) {
-            case "HIGH" -> toDoList
-                    .stream()
-                    .filter(toDo -> toDo.getPriority() == ToDoPriority.HIGHT)
-                    .collect(Collectors.toList());
-            case "MEDIUM" -> toDoList
-                    .stream()
-                    .filter(toDo -> toDo.getPriority() == ToDoPriority.MEDIUM)
-                    .collect(Collectors.toList());
-            case "LOW" -> toDoList
-                    .stream()
-                    .filter(toDo -> toDo.getPriority() == ToDoPriority.LOW)
-                    .collect(Collectors.toList());
-            default -> toDoList
-                    .stream()
-                    .collect(Collectors.toList());
-        };*/
     }
 
     Optional<ToDo> findById(Integer id) {
@@ -142,10 +125,9 @@ public class ToDoRepository {
     }
 
     // POST mark as done
-    void markDone(Integer id, Boolean done){
+    void markDone(Integer id){
         if(!toDos.get(id).getDone()) {
-            ToDo toDo = toDos.get(id);
-
+            toDos.get(id).setDone(true);
         }
     }
 

@@ -55,6 +55,13 @@ public class ToDoController {
         toDoRepository.create(toDo);
     }
 
+    // POST Request to mark as DONE
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @PostMapping("/{id}/done")
+    void markDone(@PathVariable Integer id){
+        toDoRepository.markDone(id);
+    }
+
     // PUT Request to make a ToDO update
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
