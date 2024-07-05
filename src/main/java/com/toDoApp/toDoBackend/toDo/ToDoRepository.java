@@ -72,15 +72,11 @@ public class ToDoRepository {
 
     // Text Filter
     List<ToDo> textFilter(List<ToDo> toDoList, String param){
-        if(param.isEmpty())
-            return toDoList
-                    .stream()
-                    .toList();
-        else
-            return toDoList
-                    .stream()
-                    .filter(toDo -> toDo.text().toLowerCase().contains(param.toLowerCase()))
-                    .toList();
+        //System.out.println(param);
+        return toDoList
+                .stream()
+                .filter(toDo -> param == null || param.isEmpty() || toDo.text().toLowerCase().contains(param.toLowerCase()))
+                .toList();
     }
 
     // Priority Filter
