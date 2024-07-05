@@ -126,12 +126,15 @@ public class ToDoRepository {
 
     // POST mark as done
     void markDone(Integer id){
-        if(!toDos.get(id).getDone()) {
-            toDos.get(id).setDone(true);
-        }
+        for(ToDo toDo : toDos)
+            if(toDo.getId().equals(id) && !toDo.getDone()){
+                toDo.setDone(true);
+                break;
+            }
     }
 
     // PUT mark as undone
+
 
     // PUT request
     void update(ToDo toDo, Integer id){
