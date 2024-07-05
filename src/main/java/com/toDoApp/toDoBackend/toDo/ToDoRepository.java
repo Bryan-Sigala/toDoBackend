@@ -3,6 +3,7 @@ package com.toDoApp.toDoBackend.toDo;
 import com.toDoApp.toDoBackend.run.Location;
 import com.toDoApp.toDoBackend.run.Run;
 import jakarta.annotation.PostConstruct;
+import org.apache.logging.log4j.util.PropertySource;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,9 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -48,7 +47,37 @@ public class ToDoRepository {
         int end = Math.min(start + pageSize, priorityFilterList.size());
         List<ToDo> paginatedToDos = priorityFilterList.subList(start, end);
 
+        //sortBy(paginatedToDos, sortBy);
+
         return paginatedToDos;
+    }
+
+    // Sort Method
+    void sortBy(List<ToDo> toDoList, String param) {
+        Comparator<ToDo> comparator = null;
+
+        switch (param) {
+            case "priorityAsc":
+                comparator = Comparator.comparing(ToDo::priority);
+                break;
+            case "priorityDes":
+                comparator = Comparator.comparing(ToDo::priority, Comparator.reverseOrder());
+                System.out.println(comparator);
+                break;
+            case "dueDateAsc":
+                comparator = Comparator.comparing(ToDo::dueDate);
+                break;
+            case "dueDateDes":
+                comparator = Comparator.comparing(ToDo::dueDate, Comparator.reverseOrder());
+                break;
+            default:
+                // No need for a comparison
+                break;
+        }
+        if (comparator != null) {
+            // Sort list
+            Collections.sort(toDoList, comparator);
+        }
     }
 
     // Filters methods
