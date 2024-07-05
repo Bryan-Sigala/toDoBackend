@@ -134,7 +134,13 @@ public class ToDoRepository {
     }
 
     // PUT mark as undone
-
+    void markUndone(Integer id){
+        for(ToDo toDo : toDos)
+            if(toDo.getId().equals(id) && toDo.getDone()){
+                toDo.setDone(false);
+                break;
+            }
+    }
 
     // PUT request
     void update(ToDo toDo, Integer id){
