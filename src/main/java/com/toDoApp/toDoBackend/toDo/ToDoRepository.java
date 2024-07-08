@@ -142,12 +142,17 @@ public class ToDoRepository {
             }
     }
 
-    // PUT request
-    void update(ToDo toDo, Integer id){
-        Optional<ToDo> existingToDo = findById(id);
-        if(existingToDo.isPresent()){
-            toDos.set(toDos.indexOf(existingToDo.get()), toDo);
-        }
+    // PUT request to update priority, due date or text
+    void update(Integer id, String priority, String text, LocalDate dueDate){
+        for(ToDo toDo : toDos)
+            if(toDo.getId().equals(id)){
+                if(ToDoPriority.isValid(priority))
+                    toDo.setPriority(ToDoPriority.valueOf(priority));
+                if(text != null && !text.isEmpty())
+                    toDo.setText(text);
+                if(!dueDate.isEqual(null) && !dueDate.isBefore(LocalDate.now()))
+                    toDo.setDueDate(dueDate);
+            }
     }
 
     // DELETE request to eliminate a ToDo

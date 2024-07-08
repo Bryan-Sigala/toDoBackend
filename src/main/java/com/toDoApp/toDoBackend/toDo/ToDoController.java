@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,17 +57,21 @@ public class ToDoController {
     }
 
     // POST Request to mark as DONE
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/{id}/done")
     void markDone(@PathVariable Integer id){
         toDoRepository.markDone(id);
     }
 
-    // PUT Request to make a ToDO update
+    // PUT Request to update name, due date or priority
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
-    void update(@RequestBody ToDo toDo, @PathVariable Integer id){
-        toDoRepository.update(toDo, id);
+    void update(
+            @PathVariable Integer id,
+            @RequestParam String priority,
+            @RequestParam String text,
+            @RequestParam LocalDate dueDate){
+        toDoRepository.update(id, priority, text, dueDate);
     }
 
     // PUT request to mark as UNDONE
