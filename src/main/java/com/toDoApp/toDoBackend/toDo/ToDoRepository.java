@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -143,15 +144,19 @@ public class ToDoRepository {
     }
 
     // PUT request to update priority, due date or text
-    void update(Integer id, String priority, String text, LocalDate dueDate){
+    void update(Integer id, String priority, String text, String dueDate){
         for(ToDo toDo : toDos)
             if(toDo.getId().equals(id)){
                 if(ToDoPriority.isValid(priority))
                     toDo.setPriority(ToDoPriority.valueOf(priority));
                 if(text != null && !text.isEmpty())
                     toDo.setText(text);
-                if(!dueDate.isEqual(null) && !dueDate.isBefore(LocalDate.now()))
-                    toDo.setDueDate(dueDate);
+                if(dueDate != null && !dueDate.isEmpty()){
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    LocalDate dd = LocalDate.parse(dueDate, formatter);
+                    if (!dd.isBefore(LocalDate.now()))
+                        toDo.setDueDate(dd);
+                }
             }
     }
 

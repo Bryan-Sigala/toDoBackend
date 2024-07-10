@@ -68,9 +68,9 @@ public class ToDoController {
     @PutMapping("/{id}")
     void update(
             @PathVariable Integer id,
-            @RequestParam String priority,
-            @RequestParam String text,
-            @RequestParam LocalDate dueDate){
+            @RequestParam(required = false) String priority,
+            @RequestParam(required = false) String text,
+            @RequestParam(required = false) String dueDate){
         toDoRepository.update(id, priority, text, dueDate);
     }
 
